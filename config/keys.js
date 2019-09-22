@@ -1,3 +1,3 @@
 module.exports = {
-    MongoURI: 'mongodb://localhost:27017/nodeJs'
+    MongoURI: 'mongodb+srv://dhoju:dhoju1234@cluster0-xx8fg.gcp.mongodb.net/NodeJsPassport?retryWrites=true'
 }
