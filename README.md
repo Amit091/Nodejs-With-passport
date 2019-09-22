@@ -1,3 +1,6 @@
+Node js Application with Passport
+
+
 A sample project to demonstrate the usage of Passport.js in nodejs for authentication and session-ejs-layouts
 
 also demonstrating ejs layouts fature like express-handlebar
