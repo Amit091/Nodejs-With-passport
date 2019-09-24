@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const { forwardAuthenticated } = require('../config/auth');
 const User = require('../models/User');
+const flash = require('connect-flash');
+
 
 
 router.get('/login', forwardAuthenticated, (req, res) => {
@@ -86,12 +88,14 @@ router.post('/login', (req, res, next) => {
         failureRedirect: '/users/login',
         failureFlash: true
     })(req, res, next);
+    console.log(req.session);
+
 });
 
 
 router.get('/logout', (req, res) => {
     req.logout();
-    req.flash('success_msg', 'You are logged out');
+    req.flash('warning_msg', 'You are logged out');
     res.redirect('/users/login');
 });
 

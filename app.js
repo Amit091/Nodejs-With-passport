@@ -3,7 +3,8 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 const flash = require('connect-flash');
 const session = require('express-session');
-const passport = require('passport')
+const passport = require('passport');
+const logger = require('morgan');
 
 
 const app = express();
@@ -24,6 +25,7 @@ mongoose.connect(db, {
     console.log(`Connection Failed #${error}`)
 );
 
+app.use(logger('dev'));
 //EJS
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -36,8 +38,10 @@ app.use(express.json());
 //express session
 app.use(session({
     secret: 'keyboard',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    duration: 1000 * 1,
+
 }));
 
 app.use(passport.initialize());
@@ -50,6 +54,7 @@ app.use(flash());
 app.use(function(req, res, next) {
     res.locals.success_msg = req.flash('success_msg');
     res.locals.error_msg = req.flash('error_msg');
+    res.locals.warning_msg = req.flash('warning_msg');
     res.locals.error = req.flash('error');
     next();
 });

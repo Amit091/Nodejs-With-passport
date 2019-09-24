@@ -1,5 +1,5 @@
 module.exports = {
-    ensureAuthenticated: function(req, res, next) {
+    ensureAuthenticated: (req, res, next) => {
         if (req.isAuthenticated()) {
             return next();
         }
@@ -10,6 +10,9 @@ module.exports = {
         if (!req.isAuthenticated()) {
             return next();
         }
+        req.flash('success_msg', `Welcome ${req.user.name},You are already logged In`);
+        console.log(`from auth middleware ${req.user}`);
         res.redirect('/dashboard');
+
     }
 };

@@ -5,37 +5,46 @@ const bcrypt = require('bcryptjs');
 // Load User model
 const User = require('../models/User');
 
-module.exports = function(passport) {
-    passport.use(
-        new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-            // Match user
-            User.findOne({
-                email: email
-            }).then(user => {
-                if (!user) {
-                    return done(null, false, { message: 'That email is not registered' });
-                }
-
-                // Match password
-                bcrypt.compare(password, user.password, (err, isMatch) => {
-                    if (err) throw err;
-                    if (isMatch) {
-                        return done(null, user);
-                    } else {
-                        return done(null, false, { message: 'Password incorrect' });
+module.exports = async(passport) => {
+    try {
+        passport.use(
+            new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+                // Match user
+                User.findOne({
+                    email: email
+                }).then(user => {
+                    if (!user) {
+                        return done(null, false, { message: 'That email is not registered' });
                     }
+
+                    // Match password
+                    bcrypt.compare(password, user.password, (err, isMatch) => {
+                        if (err) throw err;
+                        if (isMatch) {
+                            return done(null, user);
+                        } else {
+                            return done(null, false, { message: 'Password incorrect' });
+                        }
+                    });
                 });
-            });
-        })
-    );
+            })
+        );
 
-    passport.serializeUser((user, done) => {
-        done(null, user.id);
-    });
 
-    passport.deserializeUser((id, done) => {
-        User.findById(id, function(err, user) {
-            done(err, user);
+        passport.serializeUser((user, done) => {
+            console.log(`Added to session: ${user.name} `);
+
+            done(null, user.id);
         });
-    });
+
+        passport.deserializeUser((id, done) => {
+            User.findById(id, function(err, user) {
+                console.log(`Remove from session: ${user.name} `);
+                done(err, user);
+            });
+        });
+
+    } catch (error) {
+
+    }
 };
